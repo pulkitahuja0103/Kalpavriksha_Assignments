@@ -4,38 +4,53 @@
 #include <ctype.h>
 #include <string.h>
 
-bool checkValid(char *str){
-    int i=0;
-    while(str[i] != '\0'){
-        if(str[i]!='+' && str[i]!='-' && str[i]!='*' && str[i]!='/' && str[i]!=' ' && !isdigit(str[i])){
+int stackOperand[100];
+char stackOperator[100];
+
+int topOperand=-1;
+int topOperator=-1;
+
+
+bool checkIsDigit(char ch){
+    if(ch>='0' && ch<='9'){
+        return true;
+    }
+    return false;
+}
+
+bool checkValid(char expression[1000]) {
+
+     int indx=0;
+    while(expression[indx] != '\0'){
+        if(expression[indx]!='+' && expression[indx]!='-' && expression[indx]!='*' && expression[indx]!='/' && expression[indx]!=' ' && !checkIsDigit(expression[indx])){
             return false;
         }
-        i++;
+        indx++;
     }
 
     return true;
 }
 
-int priority(char ch){
-    if(ch=='+' || ch=='-'){
+int priority(char character){
+    if(character=='+' || character=='-'){
         return 1;
     }
 
-    if(ch=='*' || ch=='/'){
+    if(character=='*' || character=='/'){
         return 2;
     }
 
-    return 0;//for any other symbol
+    return 0;
 }
 
-int calculate(int num1,int num2,char ch){
-    if(ch=='+'){
+int calculate(int num1,int num2,char operator){
+    if(operator=='+'){
         return num1+num2;
-    }else if(ch=='-'){
+    }else if(operator=='-'){
         return num1-num2;
-    }else if(ch=='*'){
+    }else if(operator=='*'){
         return num1*num2;
-    }else if(ch=='/'){
+    }else if(operator=='/'){
         if(num2==0){
             printf("Error: Division by zero.");
             exit(1);
@@ -48,96 +63,99 @@ int calculate(int num1,int num2,char ch){
         exit(1);
     }
 }
+int getStringLength(char expression[1000]){
 
-int solve(char *str){
-    int stack1[100];//to store operands
-    char stack2[100];//to store operators
+    int length=0;
 
-    int top1=-1;
-    int top2=-1;
+    while (expression[length]!='\0')
+    {   
+        length++;
+    }
+    
+    return length;
 
-    int i=0;
+}
+void fetchCalculateAndSave(){
+        int num2 = stackOperand[topOperand];
+        topOperand--;
 
-    while(str[i]!='\0'){
+        int num1 = stackOperand[topOperand];
+        topOperand--;
+
+        char operator = stackOperator[topOperator];
+        topOperator--;
+
+        topOperand++;
+        stackOperand[topOperand] = calculate(num1, num2, operator);
+}
+int evluateExpression(char expression[1000]){
+
+    int indx=0;
+
+    while(expression[indx]!='\0'){
 
         // space
-        if(str[i]==' '){
-            i++;
+        if(expression[indx]==' '){
+            indx++;
             continue;
         }
 
         // number
-        if(isdigit(str[i])){
+        if(checkIsDigit(expression[indx])){
            //get full number
            int num=0;
-           while(i < strlen(str) && isdigit(str[i])){
-            num=num * 10 + (str[i]-'0');
-            i++;
+           while(indx < getStringLength(expression) && checkIsDigit(expression[indx])){
+            num=num * 10 + (expression[indx]-'0');
+            indx++;
            }
-           top1++;
-            stack1[top1]=num;
+            topOperand++;
+            stackOperand[topOperand]=num;
             continue;
         }
 
         // operator
-        if(str[i]=='+' || str[i]=='-' || str[i]=='*' ||str[i]=='/' ){
-            while(top2!=-1 && priority(stack2[top2])>=priority(str[i])){
-                int num2=stack1[top1];
-                top1--;
+        if(expression[indx]=='+' || expression[indx]=='-' || expression[indx]=='*' ||expression[indx]=='/' ){
 
-                int num1=stack1[top1];
-                top1--;
+            while(topOperator!=-1 && priority(stackOperator[topOperator])>=priority(expression[indx])){
 
-                char op=stack2[top2];
-                top2--;
-
-                int ans=calculate(num1,num2,op);
-
-                top1++;
-                stack1[top1]=ans;
+                fetchCalculateAndSave();
             }
 
-            top2++;
-            stack2[top2]=str[i];
+            topOperator++;
+            stackOperator[topOperator]=expression[indx];
         }
 
-        i++;
+        indx++;
     }
 
-    // for remaining elements in stack2
-    while (top2 != -1)
+    // for remaining elements in stackOperator
+    while (topOperator != -1)
     {
-        int num2 = stack1[top1];
-        top1--;
-
-        int num1 = stack1[top1];
-        top1--;
-
-        char op = stack2[top2];
-        top2--;
-
-        top1++;
-        stack1[top1] = calculate(num1, num2, op);
+        fetchCalculateAndSave();
     }
+    
+    return stackOperand[topOperand]; 
+}
 
-    return stack1[top1]; 
+void getInput(char expression[1000]){
+    printf("Enter your Expression: ");
+    scanf("%[^\n]", expression);//also to get spaces
+}
+
+void setOutput(char expression[1000]){
+    if(checkValid(expression)){
+        int result=evluateExpression(expression);
+        printf("Result: %d",result);
+    }else{
+        printf("Error: Invalid expression.");
+    }
 }
 
 int main(){
 
-    char str[1000];
-
-    printf("Enter your string: ");
-    fgets(str,sizeof(str),stdin);//also to get spaces
-
-    str[strcspn(str,"\n")]='\0';//to remove enter (\n)
-
-    if(checkValid(str)){
-        int ans=solve(str);
-        printf("Result: %d",ans);
-    }else{
-        printf("Error: Invalid expression.");
-    }
+    char expression[1000];
+    getInput(expression);
+    setOutput(expression);
 
     return 0;
 }

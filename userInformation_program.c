@@ -3,42 +3,44 @@
 #include<stdlib.h>
 #include<string.h>
 
-struct MyStructure
+struct userAttributes
 {
     int ID;
     char name[100];
     int age;
 };
 
-void create(FILE *file){
-    struct MyStructure s;
+void createNewUser(FILE *file){
+    struct userAttributes user;
+    
     printf("\nEnter your ID:\n");
-    scanf("%d",&s.ID);
+    scanf("%d",&user.ID);
+    getchar();
     printf("\nEnter your name:\n");
-    scanf("%s",&s.name);
+    scanf("%[^\n]",&user.name);
     printf("\nEnter your age:\n");
-    scanf("%d",&s.age);
+    scanf("%d",&user.age);
 
     // setting file pointer to end
     fseek(file,0,SEEK_END);
-    fwrite(&s,sizeof(s),1,file);
+    fwrite(&user,sizeof(user),1,file);
 
-    printf("\n user created. \n");
+    printf("\n New user uccessfully created. \n");
 
 }
 
-void read(FILE *file){
-    struct MyStructure s;
+void readUserInformation(FILE *file){
+    struct userAttributes user;
 
     // setting file pointer to start
     fseek(file, 0, SEEK_SET);
     
 
     int count=1;
-    while (fread(&s,sizeof(s),1,file))
+    while (fread(&user,sizeof(user),1,file))
     {   
         printf("\t\tUser-%d\n",count++);
-        printf("ID=%d\nName=%s\nAge=%d\n\n",s.ID,s.name,s.age);
+        printf("ID=%d\nName=%s\nAge=%d\n\n",user.ID,user.name,user.age);
     }
 
 }
@@ -49,7 +51,7 @@ void deleteUser(FILE *file){
     scanf("%d", &idToDelete);
 
     FILE *temp = fopen("temp.txt", "w");
-    struct MyStructure s;
+    struct userAttributes user;
 
     // setting file pointer to start
     fseek(file, 0, SEEK_SET);
@@ -57,12 +59,12 @@ void deleteUser(FILE *file){
 
     bool flag=false;
 
-    while (fread(&s, sizeof(s), 1, file)) {
-        if (s.ID == idToDelete) {
+    while (fread(&user, sizeof(user), 1, file)) {
+        if (user.ID == idToDelete) {
             flag = true;
             //don't add this  
         } else {
-            fwrite(&s, sizeof(s), 1, temp);
+            fwrite(&user, sizeof(user), 1, temp);
         }
     }
 
@@ -80,12 +82,12 @@ void deleteUser(FILE *file){
 
 }
 
-void update(FILE *file){
+void updateExistingUser(FILE *file){
     int idToUpdate;
     printf("Enter user's ID you want to update: ");
     scanf("%d", &idToUpdate);
     FILE *temp = fopen("temp.txt", "w");
-    struct MyStructure s;
+    struct userAttributes user;
 
     // setting file pointer to start
     fseek(file, 0, SEEK_SET);
@@ -93,10 +95,8 @@ void update(FILE *file){
 
     bool flag=false;
 
-   
-
-    while (fread(&s, sizeof(s), 1, file)) {
-        if (s.ID == idToUpdate) {
+    while (fread(&user, sizeof(user), 1, file)) {
+        if (user.ID == idToUpdate) {
 
             char newName[100];
             int newAge;
@@ -109,25 +109,27 @@ void update(FILE *file){
             scanf("%d",&option);
             switch(option){
                 case 1:
+                    getchar();
                     printf("\nEnter new Name:");
-                    scanf("%s",&newName);
+                    scanf("%[^\n]",&newName);
 
-                    strcpy(s.name,newName);
+                    strcpy(user.name,newName);
                     break;
                 case 2:
                     printf("\nEnter new Age:");
                     scanf("%d",&newAge);
 
-                    s.age=newAge;
+                    user.age=newAge;
                     break;
                 case 3:
+                    getchar();
                     printf("\nEnter new Name:");
-                    scanf("%s",&newName);
+                    scanf("%[^\n]",&newName);
                     printf("\nEnter new Age:");
                     scanf("%d",&newAge);
 
-                    strcpy(s.name,newName);
-                    s.age=newAge;
+                    strcpy(user.name,newName);
+                    user.age=newAge;
 
                     break;
                 default:
@@ -140,7 +142,7 @@ void update(FILE *file){
             flag = true;
               
         } 
-            fwrite(&s, sizeof(s), 1, temp);
+            fwrite(&user, sizeof(user), 1, temp);
         
     }
 
@@ -159,15 +161,8 @@ void update(FILE *file){
 
 
 }
-
-int main(){
-    FILE *file=fopen("users.txt","r+");
-
-    if(file==NULL){
-        file=fopen("users.txt","w+");
-    }
-
-    int val;
+void getInput(FILE *file){
+    int choice;
     while(true){
 
         printf("Enter 0 to Exit\n");
@@ -176,33 +171,42 @@ int main(){
         printf("Enter 3 to Update User\n");
         printf("Enter 4 to Read Users\n");
 
-        scanf("%d",&val);
+        scanf("%d",&choice);
 
-        switch(val){
+        switch(choice){
             case 0:
                 fclose(file);
                 exit(0);
                 break;
             case 1:
-                create(file);
+                createNewUser(file);
                 break;
             case 2:
                 deleteUser(file);
                 file = fopen("users.txt", "r+");
                 break;
             case 3:
-                update(file);
+                updateExistingUser(file);
                 file = fopen("users.txt", "r+");
                 break;
             case 4:
-                read(file);
+                readUserInformation(file);
                 break;
             default:
-                printf("Invalid , select from above choices\n");
-        }
-
+                printf("Invalid Choice , select from above listed choices\n");
+        } 
         
     }
 
+}
+int main(){
+    FILE *file=fopen("users.txt","r+");
+
+    if(file==NULL){
+        file=fopen("users.txt","w+");
+    }
+
+    getInput(file);
+    
     return 0;
 }

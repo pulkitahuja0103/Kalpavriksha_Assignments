@@ -1,8 +1,8 @@
 #include <stdio.h>
 
-int calculateRemainder(int baseValue, int exponentValue, int modulusValue)
+long long calculateRemainder(long long baseValue, long long exponentValue, long long modulusValue)
 {
-    int result = 1;
+    long long result = 1;
     baseValue = baseValue % modulusValue; 
     while (exponentValue > 0)
     {
@@ -18,21 +18,27 @@ int calculateRemainder(int baseValue, int exponentValue, int modulusValue)
     return result;
 }
 
-void getInputs(int *baseValue, int *exponentValue, int *modulusValue)
+void getInputs(long long *baseValue, long long *exponentValue, long long *modulusValue)
 {
     printf("Enter values of base , exponent and modulus: \n");
-    scanf("%d %d %d", &(*baseValue), &(*exponentValue), &(*modulusValue));
+    scanf("%lld %lld %lld", &(*baseValue), &(*exponentValue), &(*modulusValue));
+    if (baseValue<0 || exponentValue<0 || modulusValue<0)
+    {
+        printf("Enter positive values of base , exponent and modulus: \n");
+        scanf("%lld %lld %lld", &(*baseValue), &(*exponentValue), &(*modulusValue));
+    }
+    
 }
 
 int main()
 {
 
-    int baseValue, exponentValue, modulusValue;
+    long long baseValue, exponentValue, modulusValue;
     getInputs(&baseValue, &exponentValue, &modulusValue);
 
-    int remainder = calculateRemainder(baseValue, exponentValue, modulusValue);
+    long long remainder = calculateRemainder(baseValue, exponentValue, modulusValue);
 
-    printf("Remainder is : %d", remainder);
+    printf("Remainder is : %lld", remainder);
 
     return 0;
 }

@@ -64,16 +64,6 @@ int checkIsVowel(char ch)
     return 0;
 }
 
-int isValidString(char ch)
-{
-
-    if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z'))
-    {
-        return 1;
-    }
-    return 0;
-}
-
 int startingWithvowelAndLongestWord(char ***matrix, int *longestWordRowIndex, int *longestWordColumnIndex)
 {
     int maximumLength = 0;
@@ -82,9 +72,6 @@ int startingWithvowelAndLongestWord(char ***matrix, int *longestWordRowIndex, in
     {
         for (int columnIndex = 0; columnIndex < columns; columnIndex++)
         {
-
-            if (isValidString(matrix[rowIndex][columnIndex][0]))
-            {
                 if ((checkIsVowel(matrix[rowIndex][columnIndex][0])))
                 {
                     startWithVowels++;
@@ -95,8 +82,7 @@ int startingWithvowelAndLongestWord(char ***matrix, int *longestWordRowIndex, in
                     maximumLength = length;
                     *longestWordRowIndex = rowIndex;
                     *longestWordColumnIndex = columnIndex;
-                }
-            }
+                }  
         }
     }
     return startWithVowels;

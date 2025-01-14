@@ -64,7 +64,7 @@ int checkIsVowel(char ch)
     return 0;
 }
 
-int startingWithvowelAndLongestWord(char ***matrix, int *longestWordRowIndex, int *longestWordColumnIndex)
+int startingWithVowelAndLongestWord(char ***matrix, int *longestWordRowIndex, int *longestWordColumnIndex)
 {
     int maximumLength = 0;
     int startWithVowels = 0;

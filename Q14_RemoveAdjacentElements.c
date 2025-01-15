@@ -1,56 +1,49 @@
 #include <stdio.h>
 
-int getLength(char *str)
+void removeAdjacentElements(char *arr)
 {
-    int length = 0;
-    while (*str != '\0')
-    {
-        length++;
-        str++;
-    }
-    return length;
-}
+    int flag = 0;
 
-void removeAllAdjacentElements(char *input)
-{
     char answer[100];
-    answer[0] = input[0];
+    int answerIndex = 0;
 
-    int answerIndex = 1;
-    int index = 1;
-    while (input[index] != '\0')
+    int index = 0;
+    while (arr[index] != '\0')
     {
-        if (input[index] == answer[answerIndex - 1])
+        if (arr[index + 1] == '\0' || arr[index] != arr[index + 1])
         {
-            answerIndex--;
+            answer[answerIndex++] = arr[index];
             index++;
         }
         else
         {
-            answer[answerIndex++] = input[index++];
+            flag = 1;
+            index = index + 2;
         }
     }
-    answer[answerIndex] = '\0';
 
-    if (answer[0] == '\0')
+    answer[answerIndex] = '\0';
+    if (flag)
     {
-        printf(" ");
+        removeAdjacentElements(answer);
     }
     else
     {
-        printf("%s", answer);
+        printf("%s", arr);
     }
 }
 
-void getInput(char *input)
+void getInput(char *arr)
 {
-    printf("Enter String\n");
-    scanf("%[^\n]", input);
+    printf("Enter String:\n");
+    scanf("%[^\n]", arr);
 }
 int main()
 {
-    char input[100];
-    getInput(input);
+    char arr[100];
+    getInput(arr);
 
-    removeAllAdjacentElements(input);
+    removeAdjacentElements(arr);
+
+    return 0;
 }

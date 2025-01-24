@@ -1,3 +1,10 @@
+// leetcode Question Number-49
+/*
+Input: strs = ["eat","tea","tan","ate","nat","bat"]
+
+Output: [["bat"],["nat","tan"],["ate","eat","tea"]]
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,7 +19,7 @@ void storeFreq(char *str, int *freq)
     }
 }
 
-int isAnagrom(int *freq1, int *freq2)
+int isAnagram(int *freq1, int *freq2)
 {
     for (int i = 0; i < 26; i++)
     {
@@ -98,7 +105,7 @@ void groupAnagramStrings(int numberOfString, char **arr, int **freq)
 
         for (int j = i + 1; j < numberOfString; j++)
         {
-            if (isAnagrom(freq[i], freq[j]))
+            if (isAnagram(freq[i], freq[j]))
             {
                 printf(",%s", arr[j]);
                 arr[j] = "$";

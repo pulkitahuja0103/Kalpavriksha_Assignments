@@ -1,3 +1,9 @@
+// leetcode Question Number-4
+/*
+Input: nums1 = [1,3], nums2 = [2]
+Output: 2.00000
+Explanation: merged array = [1,2,3] and median is 2.
+*/
 #include <stdio.h>
 #include <stdlib.h>
 double calculateMedian(int *arr1, int *arr2, int size1, int size2)

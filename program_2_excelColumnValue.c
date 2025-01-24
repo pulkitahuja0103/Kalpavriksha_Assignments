@@ -1,3 +1,15 @@
+// find column value for excel alphabet notations
+/*
+Input: A
+Output: 1
+
+Input: AA
+Output: 27
+
+Input: ZY
+Output: 701
+*/
+
 #include <stdio.h>
 #include <string.h>
 int getLength(char *input)

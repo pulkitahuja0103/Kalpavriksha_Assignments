@@ -1,3 +1,9 @@
+// leetcode Question Number-3
+/*
+Input: s = "abcabcbb"
+Output: 3
+Explanation: The answer is "abc", with the length of 3.
+*/
 #include <stdio.h>
 #include <stdlib.h>
 

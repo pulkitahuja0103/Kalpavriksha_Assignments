@@ -1,4 +1,9 @@
 
+// leetcode Question Number-24
+/*
+Input: head = [1,2,3,4]
+Output: [2,1,4,3]
+*/
 #include<stdio.h>
 #include<stdlib.h>
 typedef struct node

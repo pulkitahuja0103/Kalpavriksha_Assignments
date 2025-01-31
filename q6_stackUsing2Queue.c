@@ -1,3 +1,8 @@
+// push operation time-complexity O(1) 
+// pop operation time-complexity O(n) 
+// peek operation time-complexity O(1) 
+// traversal operation time-complexity O(n) 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -44,6 +49,7 @@ void push(Queue *queue1, int value)
     {
         queue1->front = newNode;
         queue1->rear = newNode;
+        printf("%d element is inserted in stack\n", value);
         return;
     }
 

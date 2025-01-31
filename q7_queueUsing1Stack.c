@@ -1,6 +1,6 @@
 // enqueue operation time-complexity O(1)
-// dequeue operation time-complexity O(1)
-// front operation time-complexity O(1)
+// dequeue operation time-complexity O(n)
+// front operation time-complexity O(n)
 // traversal operation time-complexity O(n)
 
 #include <stdio.h>
@@ -15,107 +15,128 @@ typedef struct node
 
 typedef struct
 {
-    Node *front;
-    Node *rear;
-} Queue;
+    Node *top;
+} Stack;
 
 Node *createNewNode(int val)
 {
     Node *newNode = (Node *)malloc(sizeof(Node));
     newNode->data = val;
     newNode->next = NULL;
-
     return newNode;
 }
 
-void initializeQueue(Queue *queue)
+void initializeStack(Stack *stack)
 {
-    queue->rear = NULL;
-    queue->front = NULL;
+    stack->top = NULL;
 }
 
-int isEmpty(Queue *queue)
+int isEmpty(Stack *stack)
 {
-    if (queue->front == NULL)
+    if (stack->top == NULL)
     {
         return 1;
     }
     return 0;
 }
-void enqueue(Queue *queue, int value)
+
+void enqueue(Stack *stack, int value)
 {
     Node *newNode = createNewNode(value);
-    if (queue->front == NULL && queue->rear == NULL)
+    if (stack->top == NULL)
     {
-        queue->front = newNode;
-        queue->rear = newNode;
+        stack->top = newNode;
+        printf("%d element enqueued in queue\n", value);
         return;
     }
 
-    queue->rear->next = newNode;
-    queue->rear = newNode;
-    printf("%d element is inserted in queue\n", value);
+    newNode->next = stack->top;
+    stack->top = newNode;
+    printf("%d element enqueued in queue\n", value);
 }
 
-void dequeue(Queue *queue)
+int dequeue(Stack *stack)
 {
-    if (isEmpty(queue))
-    {
-        printf("Queue is Empty\n");
-        return;
-    }
-    Node *temp = queue->front;
-    queue->front = queue->front->next;
-    printf("%d element is deleted from queue\n", temp->data);
-    free(temp);
-}
-
-void traverseQueue(Queue *queue)
-{
-    if (isEmpty(queue))
-    {
-        printf("Queue is Empty\n");
-        return;
-    }
-    Node *temp = queue->front;
-    while (temp != NULL)
-    {
-        printf("%d ", temp->data);
-        temp = temp->next;
-    }
-    printf("\n");
-}
-
-int getFront(Queue *queue)
-{
-    if (isEmpty(queue))
+    if (isEmpty(stack))
     {
         printf("Queue is Empty\n");
         return INT_MIN;
     }
-    return queue->front->data;
+
+    Node *prev = NULL;
+    Node *curr = stack->top;
+    while (curr->next != NULL)
+    {
+        prev = curr;
+        curr = curr->next;
+    }
+
+    int value = curr->data;
+    if (prev)
+        prev->next = NULL;
+    else
+        stack->top = NULL;
+    
+    free(curr);
+    printf("%d element dequeued from queue\n", value);
+    return value;
+}
+void printQueueRecursively(Node *temp)
+{
+    if (temp == NULL)
+    {
+        return;
+    }
+
+    printQueueRecursively(temp->next);
+    printf("%d ", temp->data);
+}
+void traverseQueue(Stack *stack)
+{
+    if (isEmpty(stack))
+    {
+        printf("Queue is Empty\n");
+        return;
+    }
+
+    printQueueRecursively(stack->top);
+    printf("\n");
+}
+int getFront(Stack *stack)
+{
+    if (isEmpty(stack))
+    {
+        printf("Queue is Empty\n");
+        return INT_MIN;
+    }
+    Node* temp=stack->top;
+    while (temp->next!=NULL)
+    {
+        temp=temp->next;
+    }
+    
+    return temp->data;
 }
 
-int getSize(Queue *queue)
+int getSize(Stack *stack)
 {
-    if (isEmpty(queue))
+    if (isEmpty(stack))
     {
         return 0;
     }
-
-    Node *temp = queue->front;
-    int length = 0;
+    Node *temp = stack->top;
+    int count = 0;
     while (temp != NULL)
     {
-        length++;
+        count++;
         temp = temp->next;
     }
-    return length;
+    return count;
 }
 void getInput()
 {
-    Queue queue;
-    initializeQueue(&queue);
+    Stack stack;
+    initializeStack(&stack);
 
     while (1)
     {
@@ -134,22 +155,22 @@ void getInput()
         switch (choice)
         {
         case 1:
-            printf("Enter value to be push into queue: ");
+            printf("Enter value to be enqueue into queue: ");
             scanf("%d", &nodeValue);
-            enqueue(&queue, nodeValue);
+            enqueue(&stack, nodeValue);
             break;
         case 2:
-            dequeue(&queue);
+            dequeue(&stack);
             break;
         case 3:
-            value = getFront(&queue);
+            value = getFront(&stack);
             if (value != INT_MIN)
             {
                 printf("Current front value is %d\n", value);
             }
             break;
         case 4:
-            if (isEmpty(&queue))
+            if (isEmpty(&stack))
             {
                 printf("queue is Empty.\n");
             }
@@ -159,10 +180,10 @@ void getInput()
             }
             break;
         case 5:
-            traverseQueue(&queue);
+            traverseQueue(&stack);
             break;
         case 6:
-            printf("Size of queue is %d\n", getSize(&queue));
+            printf("Size of queue is %d\n", getSize(&stack));
             break;
         case 7:
             exit(0);
@@ -172,7 +193,9 @@ void getInput()
         }
     }
 }
+
 int main()
 {
     getInput();
+    return 0;
 }

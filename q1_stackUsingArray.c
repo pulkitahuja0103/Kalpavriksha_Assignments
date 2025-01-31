@@ -1,3 +1,8 @@
+// push operation time-complexity O(1) 
+// pop operation time-complexity O(1) 
+// peek operation time-complexity O(1) 
+// traversal operation time-complexity O(n) 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>

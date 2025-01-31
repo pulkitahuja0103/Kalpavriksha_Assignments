@@ -1,3 +1,8 @@
+// enqueue operation time-complexity O(1)
+// dequeue operation time-complexity O(1)
+// front operation time-complexity O(1)
+// traversal operation time-complexity O(n)
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -59,6 +64,10 @@ void dequeue(Queue *queue)
         printf("Queue is Empty\n");
         return;
     }
+    if (queue->front == queue->rear)
+    {
+        queue->front = queue->rear = -1;
+    }
     (queue->front)++;
 }
 
@@ -85,12 +94,14 @@ void traverseQueue(Queue *queue)
     }
     printf("\n");
 }
-int getSize(Queue* queue){
-    if(isEmpty(queue)){
+int getSize(Queue *queue)
+{
+    if (isEmpty(queue))
+    {
         return 0;
     }
 
-    int size=queue->rear-queue->front+1;
+    int size = queue->rear - queue->front + 1;
     return size;
 }
 void getInput()
@@ -160,7 +171,7 @@ void getInput()
             traverseQueue(&queue);
             break;
         case 7:
-            printf("Size of queue is %d\n",getSize(&queue));
+            printf("Size of queue is %d\n", getSize(&queue));
             break;
         case 8:
             exit(0);
